@@ -371,3 +371,158 @@ function App() {
             </Box>
           </Paper>
         </Grid>
+
+        {/* Right Panel - QR Display */}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 2, height: '100%' }}>
+            <Typography variant="h6" gutterBottom>
+              QR Code Preview
+            </Typography>
+            
+            {/* QR Code Display */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: 400,
+                bgcolor: bgColor,
+                borderRadius: 2,
+                p: 4,
+                mb: 3
+              }}
+            >
+              <div ref={qrRef}>
+                <QRCode
+                  value={text}
+                  size={size}
+                  fgColor={fgColor}
+                  bgColor={bgColor}
+                  level={errorCorrection}
+                  includeMargin={includeMargin}
+                  imageSettings={logo ? {
+                    src: logo,
+                    height: size * 0.2,
+                    width: size * 0.2,
+                    excavate: true,
+                  } : undefined}
+                />
+              </div>
+            </Box>
+
+            {/* QR Info */}
+            <Box sx={{ mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Encoded:</strong> {text.length > 50 ? text.substring(0, 50) + '...' : text}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Size:</strong> {size}px × {size}px
+              </Typography>
+            </Box>
+
+            {/* Download & Share Buttons */}
+            <Typography variant="h6" gutterBottom>
+              <Download sx={{ mr: 1 }} /> Export
+            </Typography>
+            
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                startIcon={<Download />}
+                onClick={downloadPNG}
+                color="success"
+              >
+                Download PNG
+              </Button>
+              
+              <Button
+                variant="contained"
+                startIcon={<Download />}
+                onClick={downloadSVG}
+                color="info"
+              >
+                Download SVG
+              </Button>
+              
+              <Button
+                variant="outlined"
+                startIcon={<Share />}
+                onClick={shareQR}
+              >
+                Share
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* History Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <History sx={{ mr: 1, verticalAlign: 'middle' }} />
+          Recent QR Codes
+        </DialogTitle>
+        <DialogContent>
+          {qrHistory.length === 0 ? (
+            <Typography color="text.secondary" textAlign="center" py={4}>
+              No history yet. Generate some QR codes first!
+            </Typography>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {qrHistory.map((item) => (
+                <Card key={item.id} variant="outlined">
+                  <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.text.substring(0, 40)}...
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {item.timestamp} | {item.size}px
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Button
+                        size="small"
+                        onClick={() => loadFromHistory(item)}
+                      >
+                        Load
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={clearHistory} color="error">
+            Clear All
+          </Button>
+          <Button onClick={() => setOpenDialog(false)}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        message={snackbar.message}
+      />
+
+      {/* Footer */}
+      <Box sx={{ mt: 6, textAlign: 'center', color: 'text.secondary' }}>
+        <Typography variant="body2">
+          Made with ❤️ using React & MUI
+        </Typography>
+        <Typography variant="caption">
+          Scan with any QR scanner app | All processing happens in your browser
+        </Typography>
+      </Box>
+    </Container>
+  );
+}
+
+export default App;
