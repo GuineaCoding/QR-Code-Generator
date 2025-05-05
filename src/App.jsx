@@ -290,3 +290,84 @@ function App() {
                 </Box>
               </Grid>
             </Grid>
+
+            {/* Color Presets */}
+            <Typography variant="subtitle2" gutterBottom color="text.secondary">
+              Color presets:
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
+              {colorPresets.map((color) => (
+                <Box
+                  key={color}
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    bgcolor: color,
+                    borderRadius: 1,
+                    cursor: 'pointer',
+                    border: fgColor === color ? '3px solid #1976d2' : '1px solid #ccc',
+                    '&:hover': { transform: 'scale(1.1)' }
+                  }}
+                  onClick={() => setFgColor(color)}
+                />
+              ))}
+            </Box>
+
+            {/* Error Correction */}
+            <Typography variant="h6" gutterBottom>
+              Error Correction Level
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
+              {errorLevels.map((level) => (
+                <Chip
+                  key={level.value}
+                  label={level.label}
+                  onClick={() => setErrorCorrection(level.value)}
+                  color={errorCorrection === level.value ? 'primary' : 'default'}
+                  variant={errorCorrection === level.value ? 'filled' : 'outlined'}
+                />
+              ))}
+            </Box>
+
+            {/* Margin Toggle */}
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={includeMargin}
+                  onChange={(e) => setIncludeMargin(e.target.value)}
+                />
+              }
+              label="Include Margin"
+              sx={{ mb: 3 }}
+            />
+
+            {/* Action Buttons */}
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<QrCodeScanner />}
+                onClick={generateQR}
+                size="large"
+              >
+                Generate QR Code
+              </Button>
+              
+              <Button
+                variant="outlined"
+                startIcon={<Refresh />}
+                onClick={resetToDefaults}
+              >
+                Reset
+              </Button>
+
+              <Button
+                variant="outlined"
+                startIcon={<History />}
+                onClick={() => setOpenDialog(true)}
+              >
+                History
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
