@@ -226,3 +226,67 @@ function App() {
                 ),
               }}
             />
+
+            {/* Quick Links */}
+            <Typography variant="subtitle2" gutterBottom color="text.secondary">
+              Try sample links:
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 3 }}>
+              {sampleLinks.map((link) => (
+                <Chip
+                  key={link.label}
+                  label={link.label}
+                  onClick={() => setText(link.url)}
+                  variant="outlined"
+                  size="small"
+                />
+              ))}
+            </Box>
+
+            {/* Size Control */}
+            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+              <ZoomIn sx={{ mr: 1 }} /> Size
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Slider
+                value={size}
+                onChange={(e, value) => setSize(value)}
+                min={100}
+                max={500}
+                step={10}
+                sx={{ flex: 1 }}
+              />
+              <Typography variant="body2" sx={{ minWidth: 60 }}>
+                {size}px
+              </Typography>
+            </Box>
+
+            {/* Colors */}
+            <Typography variant="h6" gutterBottom>
+              <Palette sx={{ mr: 1 }} /> Colors
+            </Typography>
+            
+            <Grid container spacing={2} mb={3}>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography variant="body2">Foreground:</Typography>
+                  <input
+                    type="color"
+                    value={fgColor}
+                    onChange={(e) => setFgColor(e.target.value)}
+                    style={{ width: 40, height: 40, cursor: 'pointer' }}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Typography variant="body2">Background:</Typography>
+                  <input
+                    type="color"
+                    value={bgColor}
+                    onChange={(e) => setBgColor(e.target.value)}
+                    style={{ width: 40, height: 40, cursor: 'pointer' }}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
