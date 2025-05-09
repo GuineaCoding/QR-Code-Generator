@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import QRCode from 'qrcode.react';
+import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
+import * as QRCode from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import {
   Container,
