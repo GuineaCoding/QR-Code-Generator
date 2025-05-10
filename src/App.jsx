@@ -395,20 +395,14 @@ function App() {
               }}
             >
               <div ref={qrRef}>
-                <QRCode
-                  value={text}
-                  size={size}
-                  fgColor={fgColor}
-                  bgColor={bgColor}
-                  level={errorCorrection}
-                  includeMargin={includeMargin}
-                  imageSettings={logo ? {
-                    src: logo,
-                    height: size * 0.2,
-                    width: size * 0.2,
-                    excavate: true,
-                  } : undefined}
-                />
+                <QRCodeSVG
+    value={text}
+    size={size}
+    fgColor={fgColor}
+    bgColor={bgColor}
+    level={errorCorrection}
+    includeMargin={includeMargin}
+  />
               </div>
             </Box>
 
