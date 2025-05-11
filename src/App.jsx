@@ -18,16 +18,7 @@ function App() {
   
   const qrRef = useRef();
 
-  // Sample URLs
-  const sampleLinks = [
-    { label: 'GitHub', url: 'https://github.com' },
-    { label: 'YouTube', url: 'https://youtube.com' },
-    { label: 'Twitter', url: 'https://twitter.com' },
-    { label: 'Portfolio', url: 'https://yourportfolio.com' },
-    { label: 'LinkedIn', url: 'https://linkedin.com' },
-  ];
 
-  // Color presets - warm tones
   const colorPresets = [
     {
       id: 'warm',
@@ -178,22 +169,7 @@ function App() {
               placeholder="https://example.com"
               className="text-input pixel-input"
             />
-            
-            {/* Sample Links */}
-            <div className="sample-links">
-              <span className="sample-label">Quick Links:</span>
-              <div className="link-chips">
-                {sampleLinks.map((link) => (
-                  <button
-                    key={link.label}
-                    onClick={() => setText(link.url)}
-                    className="link-chip pixel-button"
-                  >
-                    {link.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+
           </div>
 
           {/* Size Control */}

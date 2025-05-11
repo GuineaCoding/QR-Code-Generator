@@ -1,4 +1,25 @@
 /* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Press+Start+2P&display=swap');
+
+:root {
+  /* Warm color palette */
+  --warm-primary: #ff8a65;
+  --warm-secondary: #ffccbc;
+  --warm-accent: #5d4037;
+  --warm-bg: #fff3e0;
+  --warm-card: #fff8e1;
+  --warm-text: #3e2723;
+  --warm-border: #ffab91;
+  
+  /* Soft shadows */
+  --soft-shadow: 0 8px 32px rgba(255, 138, 101, 0.1);
+  --soft-shadow-hover: 0 12px 48px rgba(255, 138, 101, 0.2);
+  
+  /* Pixelated border radius */
+  --pixel-radius: 8px;
+  --pixel-border: 4px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,67 +27,632 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+  color: var(--warm-text);
   min-height: 100vh;
+  padding: 20px;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Pixelated text effect */
+.pixel-text {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2.5rem;
+  color: var(--warm-accent);
+  text-align: center;
+  text-shadow: 
+    4px 4px 0 var(--warm-border),
+    8px 8px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.subtitle {
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--warm-primary);
+  font-weight: 300;
+  margin-bottom: 3rem;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* QR code container animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.qr-container {
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* Button hover effects */
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Color input styling */
-input[type="color"] {
-  border: none;
-  padding: 0;
-  background: transparent;
-  border-radius: 4px;
+/* Pixel border effect */
+.pixel-border {
+  background: var(--warm-card);
+  border: var(--pixel-border) solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  box-shadow: 
+    inset 0 0 0 2px var(--warm-secondary),
+    var(--soft-shadow);
+  position: relative;
   overflow: hidden;
 }
 
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
+.pixel-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    transparent 48%, 
+    var(--warm-primary) 48%, 
+    var(--warm-primary) 52%, 
+    transparent 52%
+  );
+  background-size: 20px 20px;
+  z-index: -1;
+  opacity: 0.3;
 }
 
-input[type="color"]::-webkit-color-swatch {
-  border: none;
+/* App Layout */
+.app-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.app-header {
+  margin-bottom: 3rem;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Controls Panel */
+.controls-panel {
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.panel-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.2rem;
+  color: var(--warm-accent);
+  margin-bottom: 2rem;
+  text-align: center;
+  text-shadow: 2px 2px 0 var(--warm-secondary);
+}
+
+.input-group {
+  margin-bottom: 2rem;
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--warm-accent);
+  font-size: 1.1rem;
+}
+
+.size-value {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  color: var(--warm-primary);
+}
+
+/* Pixel Inputs */
+.pixel-input {
+  width: 100%;
+  padding: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  border: 3px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  background: var(--warm-bg);
+  color: var(--warm-text);
+  transition: all 0.3s ease;
+}
+
+.pixel-input:focus {
+  outline: none;
+  border-color: var(--warm-primary);
+  box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.3);
+}
+
+/* Sample Links */
+.sample-links {
+  margin-top: 1rem;
+}
+
+.sample-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--warm-primary);
+  margin-bottom: 0.5rem;
+}
+
+.link-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.link-chip {
+  padding: 0.5rem 1rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  background: var(--warm-secondary);
+  color: var(--warm-accent);
+  border: 2px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.link-chip:hover {
+  background: var(--warm-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Slider */
+.pixel-slider {
+  width: 100%;
+  height: 12px;
+  -webkit-appearance: none;
+  background: var(--warm-bg);
+  border: 2px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  outline: none;
+  margin-top: 0.5rem;
+}
+
+.pixel-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--warm-primary);
+  border: 2px solid var(--warm-accent);
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--warm-border);
+}
+
+.pixel-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: var(--warm-primary);
+  border: 2px solid var(--warm-accent);
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--warm-border);
+}
+
+/* Preset Grid */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.preset-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--warm-bg);
+  border: 2px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preset-button:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--soft-shadow-hover);
+}
+
+.preset-button.selected {
+  border-color: var(--warm-primary);
+  border-width: 3px;
+  box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.2);
+}
+
+.preset-preview {
+  width: 100%;
+  height: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  border: 2px solid var(--warm-border);
+}
+
+.preset-fg, .preset-bg {
+  height: 100%;
+}
+
+.preset-name {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  color: var(--warm-accent);
+  margin-top: 0.25rem;
+}
+
+/* Color Controls */
+.color-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.color-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.color-input {
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  background: transparent;
+}
+
+.color-hex {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  color: var(--warm-accent);
+  background: var(--warm-bg);
+  padding: 0.5rem 1rem;
+  border-radius: var(--pixel-radius);
+  border: 2px solid var(--warm-border);
+}
+
+/* Checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--warm-accent);
+}
+
+.checkbox-input {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--warm-border);
+  border-radius: var(--pixel-radius);
+  background: var(--warm-bg);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.checkbox-input:checked + .checkbox-custom {
+  background: var(--warm-primary);
+  border-color: var(--warm-accent);
+}
+
+.checkbox-input:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Border Controls */
+.border-controls {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: var(--warm-bg);
+  border-radius: var(--pixel-radius);
+  border: 2px solid var(--warm-border);
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pixel-button {
+  flex: 1;
+  padding: 1rem 2rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: var(--pixel-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.pixel-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.pixel-button:hover::before {
+  left: 100%;
+}
+
+.pixel-button.primary {
+  background: var(--warm-primary);
+  color: white;
+  border: 3px solid var(--warm-accent);
+  box-shadow: 4px 4px 0 var(--warm-accent);
+}
+
+.pixel-button.primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--warm-accent);
+}
+
+.pixel-button.secondary {
+  background: var(--warm-secondary);
+  color: var(--warm-accent);
+  border: 3px solid var(--warm-border);
+  box-shadow: 4px 4px 0 var(--warm-border);
+}
+
+.pixel-button.secondary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--warm-border);
+}
+
+/* Preview Panel */
+.preview-panel {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-display {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: var(--pixel-radius);
+  box-shadow: inset 0 0 20px rgba(255, 138, 101, 0.1);
+}
+
+.custom-text {
+  margin-top: 2rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  color: var(--warm-accent);
+  text-align: center;
+  padding: 1rem;
+  background: var(--warm-bg);
+  border-radius: var(--pixel-radius);
+  border: 2px solid var(--warm-border);
+  max-width: 80%;
+}
+
+/* Download Options */
+.download-options {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.options-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  color: var(--warm-accent);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.download-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.download-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  height: auto;
+}
+
+.download-btn.png {
+  background: linear-gradient(135deg, #ff8a65, #ff7043);
+  color: white;
+  border-color: #bf360c;
+}
+
+.download-btn.svg {
+  background: linear-gradient(135deg, #90caf9, #42a5f5);
+  color: white;
+  border-color: #1565c0;
+}
+
+.download-btn.share {
+  background: linear-gradient(135deg, #aed581, #7cb342);
+  color: white;
+  border-color: #33691e;
+}
+
+.btn-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.download-info {
+  background: var(--warm-bg);
+  padding: 1rem;
+  border-radius: var(--pixel-radius);
+  border: 2px solid var(--warm-border);
+}
+
+.download-info small {
+  color: var(--warm-accent);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 3px solid var(--warm-border);
+  color: var(--warm-primary);
+  font-size: 0.9rem;
+}
+
+.footer-note {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  margin-top: 0.5rem;
+  color: var(--warm-accent);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .pixel-text {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .pixel-text {
+    font-size: 1.5rem;
+    text-shadow: 
+      2px 2px 0 var(--warm-border),
+      4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .preset-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .download-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .controls-panel,
+  .preview-panel {
+    padding: 1.5rem;
+  }
+  
+  .qr-display {
+    padding: 1rem;
+  }
+  
+  .custom-text {
+    font-size: 0.7rem;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pixel-text {
+    font-size: 1.2rem;
+  }
+  
+  .preset-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .preset-name {
+    font-size: 0.5rem;
+  }
+  
+  .color-input {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .color-hex {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .download-btn {
+    padding: 1rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .btn-icon {
+    font-size: 1.2rem;
+  }
+}
+
+/* Loading animation for QR generation */
+@keyframes pixelPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+.qr-display {
+  animation: pixelPulse 2s ease-in-out infinite;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
