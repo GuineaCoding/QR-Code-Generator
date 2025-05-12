@@ -1,4 +1,4 @@
-/* App.css */
+/* App.css - Complete Centered Version */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Press+Start+2P&display=swap');
 
 :root {
@@ -18,6 +18,11 @@
   /* Pixelated border radius */
   --pixel-radius: 8px;
   --pixel-border: 4px;
+  
+  /* Layout */
+  --max-width: 1400px;
+  --panel-width: 600px;
+  --mobile-padding: 20px;
 }
 
 * {
@@ -31,13 +36,42 @@ body {
   background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
   color: var(--warm-text);
   min-height: 100vh;
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--mobile-padding);
 }
 
-/* Pixelated text effect */
+/* ===== CONTAINER ===== */
+.app-container {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.header-content {
+  max-width: 800px;
+  width: 100%;
+}
+
 .pixel-text {
   font-family: 'Press Start 2P', cursive;
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
   color: var(--warm-accent);
   text-align: center;
   text-shadow: 
@@ -45,18 +79,45 @@ body {
     8px 8px 0 rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
   letter-spacing: 1px;
+  line-height: 1.4;
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   text-align: center;
   color: var(--warm-primary);
   font-weight: 300;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   margin-bottom: 3rem;
 }
 
-/* Pixel border effect */
-.pixel-border {
+.content-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 1150px) {
+  .content-wrapper {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+}
+
+/* ===== PANELS ===== */
+.controls-panel,
+.preview-panel {
   background: var(--warm-card);
   border: var(--pixel-border) solid var(--warm-border);
   border-radius: var(--pixel-radius);
@@ -65,9 +126,15 @@ body {
     var(--soft-shadow);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
 }
 
-.pixel-border::before {
+.controls-panel::before,
+.preview-panel::before {
   content: '';
   position: absolute;
   top: -2px;
@@ -85,40 +152,35 @@ body {
   opacity: 0.3;
 }
 
-/* App Layout */
-.app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.app-header {
-  margin-bottom: 3rem;
-}
-
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-/* Controls Panel */
-.controls-panel {
-  padding: 2rem;
-  backdrop-filter: blur(10px);
+.panel-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .panel-title {
   font-family: 'Press Start 2P', cursive;
   font-size: 1.2rem;
   color: var(--warm-accent);
-  margin-bottom: 2rem;
   text-align: center;
   text-shadow: 2px 2px 0 var(--warm-secondary);
+  margin-bottom: 0.5rem;
 }
 
+.panel-subtitle {
+  color: var(--warm-primary);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ===== CONTROLS ===== */
 .input-group {
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .input-label {
@@ -126,29 +188,32 @@ body {
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: var(--warm-accent);
-  font-size: 1.1rem;
+  font-size: 1rem;
+  text-align: center;
+  width: 100%;
 }
 
 .size-value {
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--warm-primary);
 }
 
-/* Pixel Inputs */
-.pixel-input {
+/* Input Fields */
+.text-input {
   width: 100%;
   padding: 1rem;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.9rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
   border: 3px solid var(--warm-border);
   border-radius: var(--pixel-radius);
   background: var(--warm-bg);
   color: var(--warm-text);
   transition: all 0.3s ease;
+  text-align: center;
 }
 
-.pixel-input:focus {
+.text-input:focus {
   outline: none;
   border-color: var(--warm-primary);
   box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.3);
@@ -157,18 +222,23 @@ body {
 /* Sample Links */
 .sample-links {
   margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sample-label {
-  display: block;
   font-size: 0.9rem;
   color: var(--warm-primary);
   margin-bottom: 0.5rem;
+  text-align: center;
 }
 
 .link-chips {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -199,7 +269,7 @@ body {
   border: 2px solid var(--warm-border);
   border-radius: var(--pixel-radius);
   outline: none;
-  margin-top: 0.5rem;
+  margin: 0.5rem 0;
 }
 
 .pixel-slider::-webkit-slider-thumb {
@@ -223,12 +293,27 @@ body {
   box-shadow: 2px 2px 0 var(--warm-border);
 }
 
+.size-hint {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.8rem;
+  width: 100%;
+}
+
 /* Preset Grid */
 .preset-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-top: 1rem;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .preset-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .preset-button {
@@ -241,6 +326,7 @@ body {
   border-radius: var(--pixel-radius);
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .preset-button:hover {
@@ -273,20 +359,31 @@ body {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.6rem;
   color: var(--warm-accent);
-  margin-top: 0.25rem;
+  text-align: center;
 }
 
 /* Color Controls */
 .color-controls {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   margin-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+@media (max-width: 500px) {
+  .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .color-group {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .color-input-wrapper {
@@ -294,11 +391,13 @@ body {
   align-items: center;
   gap: 1rem;
   margin-top: 0.5rem;
+  width: 100%;
+  justify-content: center;
 }
 
 .color-input {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border: 3px solid var(--warm-border);
   border-radius: var(--pixel-radius);
   cursor: pointer;
@@ -313,6 +412,8 @@ body {
   padding: 0.5rem 1rem;
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
+  min-width: 100px;
+  text-align: center;
 }
 
 /* Checkbox */
@@ -323,6 +424,7 @@ body {
   cursor: pointer;
   font-weight: 600;
   color: var(--warm-accent);
+  justify-content: center;
 }
 
 .checkbox-input {
@@ -362,6 +464,10 @@ body {
   background: var(--warm-bg);
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Action Buttons */
@@ -369,10 +475,13 @@ body {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
 }
 
+/* Pixel Buttons */
 .pixel-button {
-  flex: 1;
   padding: 1rem 2rem;
   font-family: 'Press Start 2P', cursive;
   font-size: 0.9rem;
@@ -383,6 +492,8 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
+  flex: 1;
+  max-width: 250px;
 }
 
 .pixel-button::before {
@@ -424,24 +535,20 @@ body {
   box-shadow: 6px 6px 0 var(--warm-border);
 }
 
-/* Preview Panel */
-.preview-panel {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* ===== PREVIEW ===== */
 .qr-display {
   width: 100%;
+  max-width: 410px;
+  max-height: 410px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  margin-bottom: 2rem;
+  margin: 2rem auto;
   border-radius: var(--pixel-radius);
   box-shadow: inset 0 0 20px rgba(255, 138, 101, 0.1);
+  position: relative;
 }
 
 .custom-text {
@@ -461,6 +568,9 @@ body {
 .download-options {
   width: 100%;
   margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .options-title {
@@ -472,10 +582,13 @@ body {
 }
 
 .download-buttons {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .download-btn {
@@ -485,6 +598,7 @@ body {
   justify-content: center;
   padding: 1.5rem 1rem;
   height: auto;
+  min-width: 140px;
 }
 
 .download-btn.png {
@@ -515,6 +629,8 @@ body {
   padding: 1rem;
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
+  max-width: 500px;
+  text-align: center;
 }
 
 .download-info small {
@@ -523,14 +639,22 @@ body {
   line-height: 1.4;
 }
 
-/* Footer */
+/* ===== FOOTER ===== */
 .app-footer {
+  width: 100%;
   text-align: center;
   padding: 2rem;
   margin-top: 3rem;
   border-top: 3px solid var(--warm-border);
   color: var(--warm-primary);
   font-size: 0.9rem;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-content {
+  max-width: 600px;
+  width: 100%;
 }
 
 .footer-note {
@@ -540,103 +664,7 @@ body {
   color: var(--warm-accent);
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .main-content {
-    grid-template-columns: 1fr;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .pixel-text {
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
-  
-  .pixel-text {
-    font-size: 1.5rem;
-    text-shadow: 
-      2px 2px 0 var(--warm-border),
-      4px 4px 0 rgba(0, 0, 0, 0.1);
-  }
-  
-  .subtitle {
-    font-size: 1rem;
-  }
-  
-  .preset-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .color-controls {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .download-buttons {
-    grid-template-columns: 1fr;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .controls-panel,
-  .preview-panel {
-    padding: 1.5rem;
-  }
-  
-  .qr-display {
-    padding: 1rem;
-  }
-  
-  .custom-text {
-    font-size: 0.7rem;
-    padding: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .pixel-text {
-    font-size: 1.2rem;
-  }
-  
-  .preset-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-  
-  .preset-name {
-    font-size: 0.5rem;
-  }
-  
-  .color-input {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .color-hex {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-  }
-  
-  .download-btn {
-    padding: 1rem 0.5rem;
-    font-size: 0.8rem;
-  }
-  
-  .btn-icon {
-    font-size: 1.2rem;
-  }
-}
-
-/* Loading animation for QR generation */
+/* ===== ANIMATIONS ===== */
 @keyframes pixelPulse {
   0%, 100% {
     opacity: 1;
@@ -652,7 +680,92 @@ body {
   animation: pixelPulse 2s ease-in-out infinite;
 }
 
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .content-wrapper {
+    gap: 1.5rem;
+  }
+  
+  .controls-panel,
+  .preview-panel {
+    padding: 1.5rem;
+  }
+  
+  .pixel-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .download-btn {
+    min-width: 120px;
+    padding: 1rem 0.75rem;
+  }
+  
+  .btn-icon {
+    font-size: 1.2rem;
+  }
+  
+  .color-input {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .color-hex {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pixel-text {
+    font-size: 1.2rem;
+    text-shadow: 
+      2px 2px 0 var(--warm-border),
+      4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .panel-title {
+    font-size: 1rem;
+  }
+  
+  .preset-name {
+    font-size: 0.5rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pixel-button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .download-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .download-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
 /* Smooth transitions */
 * {
-  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, 
+              border-color 0.3s ease, 
+              transform 0.3s ease, 
+              box-shadow 0.3s ease;
 }
