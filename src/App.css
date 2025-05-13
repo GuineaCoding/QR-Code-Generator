@@ -1,8 +1,7 @@
-/* App.css - Complete Centered Version */
+/* App.css - Fixed Inline Layout */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Press+Start+2P&display=swap');
 
 :root {
-  /* Warm color palette */
   --warm-primary: #ff8a65;
   --warm-secondary: #ffccbc;
   --warm-accent: #5d4037;
@@ -10,19 +9,11 @@
   --warm-card: #fff8e1;
   --warm-text: #3e2723;
   --warm-border: #ffab91;
-  
-  /* Soft shadows */
   --soft-shadow: 0 8px 32px rgba(255, 138, 101, 0.1);
   --soft-shadow-hover: 0 12px 48px rgba(255, 138, 101, 0.2);
-  
-  /* Pixelated border radius */
   --pixel-radius: 8px;
   --pixel-border: 4px;
-  
-  /* Layout */
   --max-width: 1400px;
-  --panel-width: 600px;
-  --mobile-padding: 20px;
 }
 
 * {
@@ -36,42 +27,28 @@ body {
   background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
   color: var(--warm-text);
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--mobile-padding);
+  padding: 20px;
 }
 
-/* ===== CONTAINER ===== */
+/* ===== MAIN CONTAINER ===== */
 .app-container {
-  width: 100%;
   max-width: var(--max-width);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  position: relative;
 }
 
 /* ===== HEADER ===== */
 .app-header {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 3rem;
   text-align: center;
-}
-
-.header-content {
-  max-width: 800px;
-  width: 100%;
+  margin-bottom: 3rem;
+  padding-top: 1rem;
 }
 
 .pixel-text {
   font-family: 'Press Start 2P', cursive;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   color: var(--warm-accent);
   text-align: center;
   text-shadow: 
@@ -93,29 +70,24 @@ body {
 
 /* ===== MAIN CONTENT ===== */
 .main-content {
-  width: 100%;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-bottom: 3rem;
+  width: 100%;
 }
 
-.content-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+/* ===== PANELS CONTAINER - INLINE ON DESKTOP ===== */
+.panels-container {
+  display: flex;
   gap: 2rem;
   width: 100%;
+  max-width: var(--max-width);
   justify-content: center;
+  align-items: flex-start;
 }
 
-@media (max-width: 1150px) {
-  .content-wrapper {
-    grid-template-columns: 1fr;
-    max-width: 600px;
-  }
-}
-
-/* ===== PANELS ===== */
+/* ===== INDIVIDUAL PANELS ===== */
 .controls-panel,
 .preview-panel {
   background: var(--warm-card);
@@ -126,11 +98,11 @@ body {
     var(--soft-shadow);
   position: relative;
   overflow: hidden;
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: 2rem;
+  flex: 1;
+  min-width: 0; /* Prevents flex items from overflowing */
 }
 
 .controls-panel::before,
@@ -152,6 +124,16 @@ body {
   opacity: 0.3;
 }
 
+.controls-panel {
+  max-width: 550px;
+}
+
+.preview-panel {
+  max-width: 550px;
+  align-items: center;
+}
+
+/* ===== PANEL HEADERS ===== */
 .panel-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -176,11 +158,7 @@ body {
 /* ===== CONTROLS ===== */
 .input-group {
   width: 100%;
-  max-width: 500px;
   margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .input-label {
@@ -189,8 +167,6 @@ body {
   margin-bottom: 0.75rem;
   color: var(--warm-accent);
   font-size: 1rem;
-  text-align: center;
-  width: 100%;
 }
 
 .size-value {
@@ -199,7 +175,6 @@ body {
   color: var(--warm-primary);
 }
 
-/* Input Fields */
 .text-input {
   width: 100%;
   padding: 1rem;
@@ -210,7 +185,6 @@ body {
   background: var(--warm-bg);
   color: var(--warm-text);
   transition: all 0.3s ease;
-  text-align: center;
 }
 
 .text-input:focus {
@@ -222,23 +196,18 @@ body {
 /* Sample Links */
 .sample-links {
   margin-top: 1rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .sample-label {
   font-size: 0.9rem;
   color: var(--warm-primary);
   margin-bottom: 0.5rem;
-  text-align: center;
+  display: block;
 }
 
 .link-chips {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 0.5rem;
 }
 
@@ -298,7 +267,6 @@ body {
   margin-top: 0.5rem;
   color: #666;
   font-size: 0.8rem;
-  width: 100%;
 }
 
 /* Preset Grid */
@@ -307,13 +275,6 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-top: 1rem;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  .preset-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .preset-button {
@@ -326,7 +287,6 @@ body {
   border-radius: var(--pixel-radius);
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
 }
 
 .preset-button:hover {
@@ -359,7 +319,6 @@ body {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.6rem;
   color: var(--warm-accent);
-  text-align: center;
 }
 
 /* Color Controls */
@@ -368,22 +327,11 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   margin-top: 1rem;
-  width: 100%;
-  max-width: 500px;
-}
-
-@media (max-width: 500px) {
-  .color-controls {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
 }
 
 .color-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
 }
 
 .color-input-wrapper {
@@ -391,8 +339,6 @@ body {
   align-items: center;
   gap: 1rem;
   margin-top: 0.5rem;
-  width: 100%;
-  justify-content: center;
 }
 
 .color-input {
@@ -412,8 +358,6 @@ body {
   padding: 0.5rem 1rem;
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
-  min-width: 100px;
-  text-align: center;
 }
 
 /* Checkbox */
@@ -424,7 +368,6 @@ body {
   cursor: pointer;
   font-weight: 600;
   color: var(--warm-accent);
-  justify-content: center;
 }
 
 .checkbox-input {
@@ -464,10 +407,6 @@ body {
   background: var(--warm-bg);
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* Action Buttons */
@@ -475,12 +414,8 @@ body {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
-  width: 100%;
-  max-width: 500px;
-  justify-content: center;
 }
 
-/* Pixel Buttons */
 .pixel-button {
   padding: 1rem 2rem;
   font-family: 'Press Start 2P', cursive;
@@ -493,7 +428,6 @@ body {
   position: relative;
   overflow: hidden;
   flex: 1;
-  max-width: 250px;
 }
 
 .pixel-button::before {
@@ -535,7 +469,7 @@ body {
   box-shadow: 6px 6px 0 var(--warm-border);
 }
 
-/* ===== PREVIEW ===== */
+/* ===== PREVIEW PANEL ===== */
 .qr-display {
   width: 100%;
   max-width: 410px;
@@ -548,7 +482,6 @@ body {
   margin: 2rem auto;
   border-radius: var(--pixel-radius);
   box-shadow: inset 0 0 20px rgba(255, 138, 101, 0.1);
-  position: relative;
 }
 
 .custom-text {
@@ -568,9 +501,6 @@ body {
 .download-options {
   width: 100%;
   margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .options-title {
@@ -585,10 +515,6 @@ body {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  width: 100%;
-  max-width: 500px;
-  justify-content: center;
-  flex-wrap: wrap;
 }
 
 .download-btn {
@@ -598,7 +524,7 @@ body {
   justify-content: center;
   padding: 1.5rem 1rem;
   height: auto;
-  min-width: 140px;
+  flex: 1;
 }
 
 .download-btn.png {
@@ -629,7 +555,6 @@ body {
   padding: 1rem;
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
-  max-width: 500px;
   text-align: center;
 }
 
@@ -641,20 +566,12 @@ body {
 
 /* ===== FOOTER ===== */
 .app-footer {
-  width: 100%;
   text-align: center;
   padding: 2rem;
   margin-top: 3rem;
   border-top: 3px solid var(--warm-border);
   color: var(--warm-primary);
   font-size: 0.9rem;
-  display: flex;
-  justify-content: center;
-}
-
-.footer-content {
-  max-width: 600px;
-  width: 100%;
 }
 
 .footer-note {
@@ -666,27 +583,19 @@ body {
 
 /* ===== ANIMATIONS ===== */
 @keyframes pixelPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.02);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
 }
 
 .qr-display {
   animation: pixelPulse 2s ease-in-out infinite;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
-  
-  .content-wrapper {
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablet: Still side-by-side but smaller gap */
+@media (max-width: 1100px) {
+  .panels-container {
     gap: 1.5rem;
   }
   
@@ -695,42 +604,77 @@ body {
     padding: 1.5rem;
   }
   
-  .pixel-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.8rem;
-  }
-  
-  .download-btn {
-    min-width: 120px;
-    padding: 1rem 0.75rem;
-  }
-  
-  .btn-icon {
-    font-size: 1.2rem;
-  }
-  
-  .color-input {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .color-hex {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-    min-width: 80px;
+  .preset-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 480px) {
+/* Large Mobile/Tablet: Stack panels */
+@media (max-width: 900px) {
+  .panels-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .controls-panel,
+  .preview-panel {
+    max-width: 700px;
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
   .pixel-text {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     text-shadow: 
       2px 2px 0 var(--warm-border),
       4px 4px 0 rgba(0, 0, 0, 0.1);
   }
   
   .subtitle {
-    font-size: 0.9rem;
+    font-size: 1rem;
+  }
+  
+  .preset-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .pixel-button {
+    width: 100%;
+  }
+  
+  .download-buttons {
+    flex-direction: column;
+  }
+  
+  .download-btn {
+    width: 100%;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .pixel-text {
+    font-size: 1.2rem;
+  }
+  
+  .preset-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .panel-title {
@@ -741,24 +685,22 @@ body {
     font-size: 0.5rem;
   }
   
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
+  .color-input {
+    width: 40px;
+    height: 40px;
   }
   
-  .pixel-button {
-    width: 100%;
-    max-width: 300px;
-  }
-  
-  .download-buttons {
-    flex-direction: column;
-    align-items: center;
+  .color-hex {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
   }
   
   .download-btn {
-    width: 100%;
-    max-width: 300px;
+    padding: 1rem 0.5rem;
+  }
+  
+  .btn-icon {
+    font-size: 1.2rem;
   }
 }
 
