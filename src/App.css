@@ -185,6 +185,7 @@ body {
 .input-group {
   width: 100%;
   margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .input-label {
@@ -457,7 +458,6 @@ body {
   transition: all 0.3s ease;
   text-align: center;
   position: relative;
-  overflow: hidden;
   flex: 1;
 }
 
