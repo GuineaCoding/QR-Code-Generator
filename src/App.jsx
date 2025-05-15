@@ -12,7 +12,16 @@ function App() {
   const [border, setBorder] = useState(false);
   const [borderColor, setBorderColor] = useState('#ffab91');
   const [borderWidth, setBorderWidth] = useState(10);
+  
+  // Custom Text State
   const [customText, setCustomText] = useState('');
+  const [customTextColor, setCustomTextColor] = useState('#5d4037');
+  const [customTextBgColor, setCustomTextBgColor] = useState('#fff3e0');
+  const [customTextBorder, setCustomTextBorder] = useState(false);
+  const [customTextBorderColor, setCustomTextBorderColor] = useState('#ffab91');
+  const [customTextBorderWidth, setCustomTextBorderWidth] = useState(2);
+  const [customTextFontSize, setCustomTextFontSize] = useState(14);
+  
   const [selectedPreset, setSelectedPreset] = useState('warm');
   
   const qrRef = useRef();
@@ -51,7 +60,15 @@ function App() {
     setBorder(false);
     setBorderColor('#ffab91');
     setBorderWidth(10);
+    
     setCustomText('');
+    setCustomTextColor('#5d4037');
+    setCustomTextBgColor('#fff3e0');
+    setCustomTextBorder(false);
+    setCustomTextBorderColor('#ffab91');
+    setCustomTextBorderWidth(2);
+    setCustomTextFontSize(14);
+    
     setSelectedPreset('warm');
   };
 
@@ -249,6 +266,7 @@ function App() {
               )}
             </div>
 
+            {/* Custom Text Controls */}
             <div className="input-group">
               <label className="input-label">Custom Text (appears below QR)</label>
               <input
@@ -258,6 +276,96 @@ function App() {
                 placeholder="Scan to visit our website!"
                 className="text-input pixel-input"
               />
+              
+              {customText && (
+                <div className="custom-text-controls">
+                  <div className="color-controls">
+                    <div className="color-group">
+                      <label className="input-label">Text Color</label>
+                      <div className="color-input-wrapper">
+                        <input
+                          type="color"
+                          value={customTextColor}
+                          onChange={(e) => setCustomTextColor(e.target.value)}
+                          className="color-input"
+                        />
+                        <span className="color-hex">{customTextColor}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="color-group">
+                      <label className="input-label">Background Color</label>
+                      <div className="color-input-wrapper">
+                        <input
+                          type="color"
+                          value={customTextBgColor}
+                          onChange={(e) => setCustomTextBgColor(e.target.value)}
+                          className="color-input"
+                        />
+                        <span className="color-hex">{customTextBgColor}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="input-group">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={customTextBorder}
+                        onChange={(e) => setCustomTextBorder(e.target.checked)}
+                        className="checkbox-input"
+                      />
+                      <span className="checkbox-custom"></span>
+                      Add Border to Text
+                    </label>
+                    
+                    {customTextBorder && (
+                      <div className="border-controls">
+                        <div className="color-group">
+                          <label className="input-label">Border Color</label>
+                          <div className="color-input-wrapper">
+                            <input
+                              type="color"
+                              value={customTextBorderColor}
+                              onChange={(e) => setCustomTextBorderColor(e.target.value)}
+                              className="color-input"
+                            />
+                            <span className="color-hex">{customTextBorderColor}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="input-group">
+                          <label className="input-label">
+                            Border Width: <span className="size-value">{customTextBorderWidth}px</span>
+                          </label>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            value={customTextBorderWidth}
+                            onChange={(e) => setCustomTextBorderWidth(parseInt(e.target.value))}
+                            className="slider pixel-slider"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="input-group">
+                    <label className="input-label">
+                      Font Size: <span className="size-value">{customTextFontSize}px</span>
+                    </label>
+                    <input
+                      type="range"
+                      min="10"
+                      max="24"
+                      value={customTextFontSize}
+                      onChange={(e) => setCustomTextFontSize(parseInt(e.target.value))}
+                      className="slider pixel-slider"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="action-buttons">
@@ -295,7 +403,15 @@ function App() {
               />
               
               {customText && (
-                <div className="custom-text">
+                <div 
+                  className="custom-text"
+                  style={{
+                    color: customTextColor,
+                    backgroundColor: customTextBgColor,
+                    border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
+                    fontSize: `${customTextFontSize}px`
+                  }}
+                >
                   {customText}
                 </div>
               )}

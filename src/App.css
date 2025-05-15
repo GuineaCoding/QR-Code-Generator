@@ -526,6 +526,7 @@ body {
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
   max-width: 90%;
+  margin-bottom: 10px;
 }
 
 .download-options {
