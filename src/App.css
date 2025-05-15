@@ -1,4 +1,4 @@
-/* App.css - Fixed Inline Layout */
+/* App.css - FIXED Centered Layout */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Press+Start+2P&display=swap');
 
 :root {
@@ -14,6 +14,7 @@
   --pixel-radius: 8px;
   --pixel-border: 4px;
   --max-width: 1400px;
+  --panel-min-height: 700px;
 }
 
 * {
@@ -28,21 +29,27 @@ body {
   color: var(--warm-text);
   min-height: 100vh;
   padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ===== MAIN CONTAINER ===== */
+/* ===== MAIN CONTAINER - CENTERED ===== */
 .app-container {
+  width: 100%;
   max-width: var(--max-width);
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER - CENTERED TOP ===== */
 .app-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+  width: 100%;
   padding-top: 1rem;
 }
 
@@ -68,26 +75,26 @@ body {
   max-width: 600px;
 }
 
-/* ===== MAIN CONTENT ===== */
+/* ===== MAIN CONTENT - CENTERED HORIZONTALLY ===== */
 .main-content {
-  flex: 1;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  width: 100%;
 }
 
-/* ===== PANELS CONTAINER - INLINE ON DESKTOP ===== */
+/* ===== PANELS CONTAINER - CENTERED & INLINE ===== */
 .panels-container {
   display: flex;
+  justify-content: center;
+  align-items: stretch; /* Make children equal height */
   gap: 2rem;
   width: 100%;
-  max-width: var(--max-width);
-  justify-content: center;
-  align-items: flex-start;
+  max-width: 1300px; /* Slightly less than max-width for breathing room */
+  margin: 0 auto;
 }
 
-/* ===== INDIVIDUAL PANELS ===== */
+/* ===== INDIVIDUAL PANELS - EQUAL HEIGHT ===== */
 .controls-panel,
 .preview-panel {
   background: var(--warm-card);
@@ -102,7 +109,18 @@ body {
   flex-direction: column;
   padding: 2rem;
   flex: 1;
-  min-width: 0; /* Prevents flex items from overflowing */
+  min-height: var(--panel-min-height);
+  width: 100%;
+  max-width: 500px; /* Equal width for both panels */
+}
+
+/* Make panels equal height on desktop */
+@media (min-width: 900px) {
+  .controls-panel,
+  .preview-panel {
+    height: auto;
+    align-self: stretch;
+  }
 }
 
 .controls-panel::before,
@@ -124,19 +142,10 @@ body {
   opacity: 0.3;
 }
 
-.controls-panel {
-  max-width: 550px;
-}
-
-.preview-panel {
-  max-width: 550px;
-  align-items: center;
-}
-
-/* ===== PANEL HEADERS ===== */
+/* ===== PANEL HEADERS - TOP ALIGNED ===== */
 .panel-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   width: 100%;
 }
 
@@ -155,7 +164,24 @@ body {
   text-align: center;
 }
 
-/* ===== CONTROLS ===== */
+/* ===== CONTROLS PANEL CONTENT ===== */
+.controls-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+}
+
+/* ===== PREVIEW PANEL CONTENT ===== */
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* ===== INPUT GROUPS ===== */
 .input-group {
   width: 100%;
   margin-bottom: 1.5rem;
@@ -167,6 +193,7 @@ body {
   margin-bottom: 0.75rem;
   color: var(--warm-accent);
   font-size: 1rem;
+  text-align: left;
 }
 
 .size-value {
@@ -175,6 +202,7 @@ body {
   color: var(--warm-primary);
 }
 
+/* Input Fields */
 .text-input {
   width: 100%;
   padding: 1rem;
@@ -319,6 +347,7 @@ body {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.6rem;
   color: var(--warm-accent);
+  text-align: center;
 }
 
 /* Color Controls */
@@ -358,6 +387,7 @@ body {
   padding: 0.5rem 1rem;
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
+  min-width: 100px;
 }
 
 /* Checkbox */
@@ -409,11 +439,12 @@ body {
   border: 2px solid var(--warm-border);
 }
 
-/* Action Buttons */
+/* Action Buttons - Position at bottom of controls */
 .action-buttons {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  margin-top: auto; /* Push to bottom */
+  padding-top: 1rem;
 }
 
 .pixel-button {
@@ -479,28 +510,26 @@ body {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  margin: 2rem auto;
+  margin: 0 auto 2rem;
   border-radius: var(--pixel-radius);
   box-shadow: inset 0 0 20px rgba(255, 138, 101, 0.1);
 }
 
 .custom-text {
-  margin-top: 2rem;
+  margin-top: 1rem;
   font-family: 'Press Start 2P', cursive;
   font-size: 0.8rem;
   color: var(--warm-accent);
   text-align: center;
-  padding: 1rem;
+  padding: 0.75rem;
   background: var(--warm-bg);
   border-radius: var(--pixel-radius);
   border: 2px solid var(--warm-border);
-  max-width: 80%;
+  max-width: 90%;
 }
 
-/* Download Options */
 .download-options {
   width: 100%;
-  margin-top: 2rem;
 }
 
 .options-title {
@@ -522,7 +551,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem 1rem;
+  padding: 1.2rem 0.75rem;
   height: auto;
   flex: 1;
 }
@@ -568,10 +597,11 @@ body {
 .app-footer {
   text-align: center;
   padding: 2rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   border-top: 3px solid var(--warm-border);
   color: var(--warm-primary);
   font-size: 0.9rem;
+  width: 100%;
 }
 
 .footer-note {
@@ -593,10 +623,18 @@ body {
 
 /* ===== RESPONSIVE DESIGN ===== */
 
-/* Tablet: Still side-by-side but smaller gap */
+/* Large screens */
+@media (min-width: 1400px) {
+  .panels-container {
+    max-width: 1300px;
+  }
+}
+
+/* Tablet: Adjust layout */
 @media (max-width: 1100px) {
   .panels-container {
     gap: 1.5rem;
+    max-width: 900px;
   }
   
   .controls-panel,
@@ -609,25 +647,26 @@ body {
   }
 }
 
-/* Large Mobile/Tablet: Stack panels */
+/* Mobile: Stack panels */
 @media (max-width: 900px) {
   .panels-container {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
+    max-width: 600px;
   }
   
   .controls-panel,
   .preview-panel {
-    max-width: 700px;
-    width: 100%;
+    max-width: 100%;
+    min-height: auto; /* Remove fixed height on mobile */
   }
 }
 
-/* Mobile */
+/* Small screens */
 @media (max-width: 768px) {
   body {
-    padding: 10px;
+    padding: 15px;
   }
   
   .pixel-text {
@@ -654,23 +693,24 @@ body {
     flex-direction: column;
   }
   
-  .pixel-button {
-    width: 100%;
-  }
-  
   .download-buttons {
     flex-direction: column;
   }
   
+  .pixel-button,
   .download-btn {
     width: 100%;
   }
 }
 
-/* Small Mobile */
+/* Extra small screens */
 @media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
   .pixel-text {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
   
   .preset-grid {
@@ -693,6 +733,7 @@ body {
   .color-hex {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;
+    min-width: 80px;
   }
   
   .download-btn {
