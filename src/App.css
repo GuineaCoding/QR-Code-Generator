@@ -753,3 +753,72 @@ body {
               transform 0.3s ease, 
               box-shadow 0.3s ease;
 }
+
+.custom-text-controls {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: var(--warm-bg);
+  border-radius: var(--pixel-radius);
+  border: 2px solid var(--warm-border);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-text-controls .color-controls {
+  margin-top: 0;
+}
+
+.custom-text-controls .input-group {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.custom-text-controls .border-controls {
+  margin-top: 0.5rem;
+  padding: 1rem;
+}
+
+.custom-text {
+  margin-top: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: var(--pixel-radius);
+  max-width: 90%;
+  word-break: break-word;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .custom-text-controls .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .custom-text {
+    font-size: 0.7rem !important;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-text-controls {
+    padding: 1rem;
+  }
+  
+  .custom-text {
+    font-size: 0.6rem !important;
+  }
+}
