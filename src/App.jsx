@@ -449,7 +449,8 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Made with ❤️ • All processing happens in your browser</p>
+        <p>Made with ❤️ by Andrian• All processing happens in your browser</p>
+        
         <p className="footer-note">Scan with any QR scanner app</p>
       </footer>
     </div>
