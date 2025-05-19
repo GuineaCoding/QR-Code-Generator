@@ -822,3 +822,75 @@ body {
     font-size: 0.6rem !important;
   }
 }
+/* ===== SNACKBAR NOTIFICATION ===== */
+.snackbar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: var(--warm-primary);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--pixel-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  text-align: center;
+  max-width: 90%;
+  animation: snackbarSlideUp 0.3s ease, snackbarFadeOut 0.3s ease 2.7s forwards;
+  border: 2px solid var(--warm-accent);
+  box-shadow: 4px 4px 0 var(--warm-accent);
+}
+
+@keyframes snackbarSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes snackbarFadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+}
+
+/* Update share button text and styling */
+.download-btn.share {
+  background: linear-gradient(135deg, #ffd54f, #ffb300) !important;
+  color: var(--warm-text) !important;
+  border-color: #ff8f00 !important;
+}
+
+/* Button label changes based on device */
+@media (max-width: 768px) {
+  .download-btn.share::after {
+    content: 'Share';
+  }
+}
+
+@media (min-width: 769px) {
+  .download-btn.share::after {
+  }
+}
+
+/* Loading animation for copy operation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.copy-loading {
+  animation: pulse 0.5s ease infinite;
+}

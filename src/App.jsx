@@ -25,6 +25,8 @@ function App() {
   const [selectedPreset, setSelectedPreset] = useState('warm');
   
   const qrRef = useRef();
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const sampleLinks = [
     { label: 'GitHub', url: 'https://github.com' },
@@ -81,8 +83,10 @@ function App() {
       link.download = `qr-code-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+      showMessage('QR Code downloaded as PNG!');
     } catch (error) {
       console.error('Error downloading:', error);
+      showMessage('Failed to download PNG');
     }
   };
 
@@ -90,30 +94,137 @@ function App() {
     const svg = qrRef.current?.querySelector('svg');
     if (!svg) return;
     
-    const serializer = new XMLSerializer();
-    const source = serializer.serializeToString(svg);
-    const blob = new Blob([source], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
+    try {
+      const serializer = new XMLSerializer();
+      const source = serializer.serializeToString(svg);
+      const blob = new Blob([source], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `qr-code-${Date.now()}.svg`;
+      link.href = url;
+      link.click();
+      showMessage('QR Code downloaded as SVG!');
+    } catch (error) {
+      console.error('Error downloading SVG:', error);
+      showMessage('Failed to download SVG');
+    }
+  };
+
+  // FIXED: Copy QR Code IMAGE to clipboard on desktop
+  const copyQRToClipboard = async () => {
+    if (!qrRef.current) {
+      showMessage('Please generate a QR code first');
+      return;
+    }
+    
+    try {
+      // Convert QR element to canvas
+      const canvas = await html2canvas(qrRef.current);
+      
+      // Convert canvas to blob
+      canvas.toBlob(async (blob) => {
+        try {
+          // Create ClipboardItem with the image
+          const item = new ClipboardItem({
+            'image/png': blob
+          });
+          
+          // Write to clipboard
+          await navigator.clipboard.write([item]);
+          showMessage('✅ QR Code copied to clipboard!');
+        } catch (err) {
+          console.error('Clipboard write failed:', err);
+          fallbackCopy(canvas);
+        }
+      }, 'image/png');
+      
+    } catch (error) {
+      console.error('Canvas conversion failed:', error);
+      showMessage('Failed to copy QR code');
+    }
+  };
+
+  // Fallback copy method for browsers that don't support ClipboardItem
+  const fallbackCopy = (canvas) => {
+    // Create a temporary link to download the image
+    const dataUrl = canvas.toDataURL('image/png');
     const link = document.createElement('a');
-    link.download = `qr-code-${Date.now()}.svg`;
-    link.href = url;
+    link.href = dataUrl;
+    link.download = 'qr-code-copy.png';
+    
+    // Trigger download and show message
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    
+    showMessage('📋 QR downloaded! You can now paste it from your downloads folder');
   };
 
   const shareQR = async () => {
+    if (!qrRef.current) {
+      showMessage('Please generate a QR code first');
+      return;
+    }
+    
+    // Check if Web Share API is supported (mobile devices)
     if (navigator.share) {
+      // Mobile: Try to share with image file
       try {
-        await navigator.share({
-          title: 'QR Code',
-          text: 'Check out this QR code I created!',
-          url: text
-        });
+        const canvas = await html2canvas(qrRef.current);
+        
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            const file = new File([blob], 'qr-code.png', { type: 'image/png' });
+            
+            // Check if browser can share files
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({
+                  title: 'QR Code',
+                  text: `Check out this QR code: ${text}`,
+                  files: [file]
+                });
+                showMessage('QR shared successfully!');
+              } catch (shareError) {
+                // If file sharing fails, share text only
+                await navigator.share({
+                  title: 'QR Code',
+                  text: `Check out this QR code: ${text}`,
+                  url: text
+                });
+                showMessage('QR link shared!');
+              }
+            } else {
+              // Share text only if files not supported
+              await navigator.share({
+                title: 'QR Code',
+                text: `Check out this QR code: ${text}`,
+                url: text
+              });
+              showMessage('QR link shared!');
+            }
+          }
+        }, 'image/png');
+        
       } catch (error) {
-        console.log('Sharing cancelled');
+        console.log('Share cancelled or failed:', error);
+        if (error.name !== 'AbortError') {
+          showMessage('Failed to share QR code');
+        }
       }
     } else {
-      alert('Web Share API not supported in your browser');
+      // Desktop: Copy QR image to clipboard
+      copyQRToClipboard();
     }
+  };
+
+  // Show snackbar message
+  const showMessage = (message) => {
+    setSnackbarMessage(message);
+    setShowSnackbar(true);
+    setTimeout(() => {
+      setShowSnackbar(false);
+    }, 3000);
   };
 
   return (
@@ -372,7 +483,10 @@ function App() {
               <button onClick={resetToDefaults} className="pixel-button secondary">
                 Reset
               </button>
-              <button className="pixel-button primary">
+              <button 
+                onClick={() => showMessage('QR Code generated! Changes update in real-time.')}
+                className="pixel-button primary"
+              >
                 Generate QR Code
               </button>
             </div>
@@ -432,7 +546,7 @@ function App() {
                 
                 <button onClick={shareQR} className="pixel-button download-btn share">
                   <span className="btn-icon">📤</span>
-                  Share
+                  {navigator.share ? 'Share' : 'Copy Image'}
                 </button>
               </div>
               
@@ -440,7 +554,7 @@ function App() {
                 <small>
                   • PNG: High-quality image with background<br/>
                   • SVG: Vector format for unlimited scaling<br/>
-                  • Share: Direct link to generated QR
+                  • {navigator.share ? 'Share: Mobile sharing with image' : 'Copy: Desktop clipboard image'}
                 </small>
               </div>
             </div>
@@ -448,9 +562,15 @@ function App() {
         </div>
       </main>
 
+      {/* Snackbar Notification */}
+      {showSnackbar && (
+        <div className="snackbar">
+          {snackbarMessage}
+        </div>
+      )}
+
       <footer className="app-footer">
-        <p>Made with ❤️ by Andrian• All processing happens in your browser</p>
-        
+        <p>Made with ❤️ by Andrian • All processing happens in your browser</p>
         <p className="footer-note">Scan with any QR scanner app</p>
       </footer>
     </div>
