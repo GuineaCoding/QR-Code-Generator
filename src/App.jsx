@@ -498,38 +498,44 @@ function App() {
               <p className="panel-subtitle">Scan with any QR app</p>
             </div>
             
-            <div 
-              className="qr-display"
-              style={{
-                backgroundColor: bgColor,
-                border: border ? `${borderWidth}px solid ${borderColor}` : 'none',
-                padding: border ? '20px' : '0'
-              }}
-              ref={qrRef}
-            >
-              <QRCodeSVG
-                value={text}
-                size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
-                fgColor={fgColor}
-                bgColor="transparent"
-                level="M"
-                includeMargin={true}
-              />
-              
-              {customText && (
-                <div 
-                  className="custom-text"
-                  style={{
-                    color: customTextColor,
-                    backgroundColor: customTextBgColor,
-                    border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
-                    fontSize: `${customTextFontSize}px`
-                  }}
-                >
-                  {customText}
-                </div>
-              )}
-            </div>
+// In your QR display section, update this part:
+<div 
+  className="qr-display"
+  style={{
+    backgroundColor: bgColor,
+    border: border ? `${borderWidth}px solid ${borderColor}` : 'none',
+    padding: border ? '20px' : '0'
+  }}
+  ref={qrRef}
+>
+  <QRCodeSVG
+    value={text}
+    size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
+    fgColor={fgColor}
+    bgColor="transparent"
+    level="M"
+    includeMargin={true}
+    style={{
+      width: '100%',
+      height: 'auto',
+      maxWidth: '100%'
+    }}
+  />
+  
+  {customText && (
+    <div 
+      className="custom-text"
+      style={{
+        color: customTextColor,
+        backgroundColor: customTextBgColor,
+        border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
+        fontSize: `${customTextFontSize}px`
+      }}
+    >
+      {customText}
+    </div>
+  )}
+</div>
 
             <div className="download-options">
               <h3 className="options-title">Export Options</h3>
