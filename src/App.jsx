@@ -1,4 +1,4 @@
-// App.jsx
+// App.jsx - UPDATED SHARE FUNCTION
 import React, { useState, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
@@ -27,6 +27,7 @@ function App() {
   const qrRef = useRef();
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isSharing, setIsSharing] = useState(false);
 
   const sampleLinks = [
     { label: 'GitHub', url: 'https://github.com' },
@@ -146,13 +147,11 @@ function App() {
 
   // Fallback copy method for browsers that don't support ClipboardItem
   const fallbackCopy = (canvas) => {
-    // Create a temporary link to download the image
     const dataUrl = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = 'qr-code-copy.png';
     
-    // Trigger download and show message
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -160,61 +159,178 @@ function App() {
     showMessage('📋 QR downloaded! You can now paste it from your downloads folder');
   };
 
+  // ========== FIXED: Share QR as IMAGE on Mobile ==========
   const shareQR = async () => {
     if (!qrRef.current) {
       showMessage('Please generate a QR code first');
       return;
     }
     
-    // Check if Web Share API is supported (mobile devices)
-    if (navigator.share) {
-      // Mobile: Try to share with image file
-      try {
-        const canvas = await html2canvas(qrRef.current);
+    setIsSharing(true);
+    
+    try {
+      // Create canvas from QR element
+      const canvas = await html2canvas(qrRef.current, {
+        backgroundColor: null, // Transparent background
+        scale: 2, // High resolution for sharing
+        useCORS: true,
+        logging: false
+      });
+      
+      // Convert canvas to blob
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          showMessage('Failed to create image');
+          setIsSharing(false);
+          return;
+        }
         
-        canvas.toBlob(async (blob) => {
-          if (blob) {
-            const file = new File([blob], 'qr-code.png', { type: 'image/png' });
-            
+        // Create file from blob
+        const file = new File([blob], 'qr-code.png', {
+          type: 'image/png',
+          lastModified: Date.now()
+        });
+        
+        // Check if Web Share API is available (mobile)
+        if (navigator.share) {
+          try {
             // Check if browser can share files
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              try {
-                await navigator.share({
-                  title: 'QR Code',
-                  text: `Check out this QR code: ${text}`,
-                  files: [file]
-                });
-                showMessage('QR shared successfully!');
-              } catch (shareError) {
-                // If file sharing fails, share text only
-                await navigator.share({
-                  title: 'QR Code',
-                  text: `Check out this QR code: ${text}`,
-                  url: text
-                });
-                showMessage('QR link shared!');
-              }
-            } else {
-              // Share text only if files not supported
+            const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+            
+            if (canShareFiles) {
+              // Share with image file
               await navigator.share({
                 title: 'QR Code',
-                text: `Check out this QR code: ${text}`,
-                url: text
+                text: `Check out this QR code!\nLink: ${text}`,
+                files: [file]
               });
-              showMessage('QR link shared!');
+              showMessage('✅ QR Code image shared!');
+            } else {
+              // If file sharing not supported, share data URL
+              const dataUrl = canvas.toDataURL('image/png');
+              
+              // Create a temporary link for download
+              const link = document.createElement('a');
+              link.href = dataUrl;
+              link.download = 'qr-code.png';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              
+              // Then share text with instructions
+              await navigator.share({
+                title: 'QR Code',
+                text: `Check out this QR code!\nLink: ${text}\n\nImage has been downloaded to your device.`
+              });
+              showMessage('✅ QR Code saved to downloads!');
             }
+          } catch (shareError) {
+            console.log('Share error:', shareError);
+            
+            // Fallback: Create download link
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'qr-code.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showMessage('📱 QR Code saved to downloads!');
           }
-        }, 'image/png');
-        
-      } catch (error) {
-        console.log('Share cancelled or failed:', error);
-        if (error.name !== 'AbortError') {
-          showMessage('Failed to share QR code');
+        } else {
+          // Desktop: Copy to clipboard
+          copyQRToClipboard();
         }
+        
+        setIsSharing(false);
+        
+      }, 'image/png', 0.95); // 95% quality
+      
+    } catch (error) {
+      console.error('Share failed:', error);
+      setIsSharing(false);
+      showMessage('❌ Failed to share QR code');
+    }
+  };
+
+  // Alternative: Simple mobile image share (works on most devices)
+  const shareQRAsImage = async () => {
+    if (!qrRef.current) {
+      showMessage('Please generate a QR code first');
+      return;
+    }
+    
+    setIsSharing(true);
+    
+    try {
+      // Create high-quality canvas
+      const canvas = await html2canvas(qrRef.current, {
+        scale: 3, // Very high resolution for mobile
+        backgroundColor: null,
+        useCORS: true
+      });
+      
+      // Convert to data URL
+      const dataUrl = canvas.toDataURL('image/png');
+      
+      // Create temporary link for download
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'qr-code-share.png';
+      
+      // For mobile browsers that support share API
+      if (navigator.share) {
+        try {
+          // Convert data URL to blob
+          const response = await fetch(dataUrl);
+          const blob = await response.blob();
+          const file = new File([blob], 'qr-code.png', { type: 'image/png' });
+          
+          // Try to share as file
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'QR Code',
+              text: `Check out this QR code!\nLink: ${text}`
+            });
+            showMessage('✅ QR Code image shared!');
+          } else {
+            // Fallback: Save image first
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Wait a moment then share text
+            setTimeout(async () => {
+              await navigator.share({
+                title: 'QR Code',
+                text: `Check out this QR code!\nLink: ${text}\n\nImage saved to your photos.`
+              });
+            }, 500);
+            
+            showMessage('✅ QR Code saved! Now sharing...');
+          }
+        } catch (shareError) {
+          console.log('Direct share failed:', shareError);
+          
+          // Fallback: Just download the image
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          showMessage('📱 QR Code saved to your photos!');
+        }
+      } else {
+        // Desktop: Copy to clipboard
+        copyQRToClipboard();
       }
-    } else {
-      // Desktop: Copy QR image to clipboard
-      copyQRToClipboard();
+      
+    } catch (error) {
+      console.error('Image share failed:', error);
+      showMessage('❌ Failed to share image');
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -498,44 +614,38 @@ function App() {
               <p className="panel-subtitle">Scan with any QR app</p>
             </div>
             
-// In your QR display section, update this part:
-<div 
-  className="qr-display"
-  style={{
-    backgroundColor: bgColor,
-    border: border ? `${borderWidth}px solid ${borderColor}` : 'none',
-    padding: border ? '20px' : '0'
-  }}
-  ref={qrRef}
->
-  <QRCodeSVG
-    value={text}
-    size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
-    fgColor={fgColor}
-    bgColor="transparent"
-    level="M"
-    includeMargin={true}
-    style={{
-      width: '100%',
-      height: 'auto',
-      maxWidth: '100%'
-    }}
-  />
-  
-  {customText && (
-    <div 
-      className="custom-text"
-      style={{
-        color: customTextColor,
-        backgroundColor: customTextBgColor,
-        border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
-        fontSize: `${customTextFontSize}px`
-      }}
-    >
-      {customText}
-    </div>
-  )}
-</div>
+            <div 
+              className="qr-display"
+              style={{
+                backgroundColor: bgColor,
+                border: border ? `${borderWidth}px solid ${borderColor}` : 'none',
+                padding: border ? '20px' : '0'
+              }}
+              ref={qrRef}
+            >
+              <QRCodeSVG
+                value={text}
+                size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
+                fgColor={fgColor}
+                bgColor="transparent"
+                level="M"
+                includeMargin={true}
+              />
+              
+              {customText && (
+                <div 
+                  className="custom-text"
+                  style={{
+                    color: customTextColor,
+                    backgroundColor: customTextBgColor,
+                    border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
+                    fontSize: `${customTextFontSize}px`
+                  }}
+                >
+                  {customText}
+                </div>
+              )}
+            </div>
 
             <div className="download-options">
               <h3 className="options-title">Export Options</h3>
@@ -550,9 +660,13 @@ function App() {
                   Download SVG
                 </button>
                 
-                <button onClick={shareQR} className="pixel-button download-btn share">
+                <button 
+                  onClick={shareQR} 
+                  className={`pixel-button download-btn share ${isSharing ? 'sharing' : ''}`}
+                  disabled={isSharing}
+                >
                   <span className="btn-icon">📤</span>
-                  {navigator.share ? 'Share' : 'Copy Image'}
+                  {isSharing ? 'Sharing...' : (navigator.share ? 'Share Image' : 'Copy Image')}
                 </button>
               </div>
               
@@ -560,7 +674,10 @@ function App() {
                 <small>
                   • PNG: High-quality image with background<br/>
                   • SVG: Vector format for unlimited scaling<br/>
-                  • {navigator.share ? 'Share: Mobile sharing with image' : 'Copy: Desktop clipboard image'}
+                  • {navigator.share 
+                      ? 'Share: Mobile native image sharing' 
+                      : 'Copy: Desktop clipboard image'
+                    }
                 </small>
               </div>
             </div>
