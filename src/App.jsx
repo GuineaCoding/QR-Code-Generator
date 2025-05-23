@@ -159,180 +159,59 @@ function App() {
     showMessage('📋 QR downloaded! You can now paste it from your downloads folder');
   };
 
-  // ========== FIXED: Share QR as IMAGE on Mobile ==========
-  const shareQR = async () => {
-    if (!qrRef.current) {
-      showMessage('Please generate a QR code first');
-      return;
-    }
-    
-    setIsSharing(true);
-    
-    try {
-      // Create canvas from QR element
-      const canvas = await html2canvas(qrRef.current, {
-        backgroundColor: null, // Transparent background
-        scale: 2, // High resolution for sharing
-        useCORS: true,
-        logging: false
-      });
+const shareQR = async () => {
+  if (!qrRef.current) {
+    showMessage('Please generate a QR code first');
+    return;
+  }
+  
+  setIsSharing(true);
+  
+  // Generate image instantly in view
+  const canvas = await html2canvas(qrRef.current);
+  const imgUrl = canvas.toDataURL('image/png');
+  
+  // Create preview image element
+  const img = document.createElement('img');
+  img.src = imgUrl;
+  img.style.maxWidth = '100%';
+  img.style.borderRadius = '8px';
+  img.style.margin = '10px 0';
+  
+  // Create preview container
+  const preview = document.createElement('div');
+  preview.style.textAlign = 'center';
+  preview.style.padding = '20px';
+  preview.appendChild(img);
+  
+  // If mobile, share the image file
+  if (navigator.share) {
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], 'qr-code.png', { type: 'image/png' });
       
-      // Convert canvas to blob
-      canvas.toBlob(async (blob) => {
-        if (!blob) {
-          showMessage('Failed to create image');
-          setIsSharing(false);
-          return;
-        }
-        
-        // Create file from blob
-        const file = new File([blob], 'qr-code.png', {
-          type: 'image/png',
-          lastModified: Date.now()
+      try {
+        await navigator.share({
+          files: [file],
+          title: 'QR Code',
+          text: `QR Code: ${text}`
         });
-        
-        // Check if Web Share API is available (mobile)
-        if (navigator.share) {
-          try {
-            // Check if browser can share files
-            const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
-            
-            if (canShareFiles) {
-              // Share with image file
-              await navigator.share({
-                title: 'QR Code',
-                text: `Check out this QR code!\nLink: ${text}`,
-                files: [file]
-              });
-              showMessage('✅ QR Code image shared!');
-            } else {
-              // If file sharing not supported, share data URL
-              const dataUrl = canvas.toDataURL('image/png');
-              
-              // Create a temporary link for download
-              const link = document.createElement('a');
-              link.href = dataUrl;
-              link.download = 'qr-code.png';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              
-              // Then share text with instructions
-              await navigator.share({
-                title: 'QR Code',
-                text: `Check out this QR code!\nLink: ${text}\n\nImage has been downloaded to your device.`
-              });
-              showMessage('✅ QR Code saved to downloads!');
-            }
-          } catch (shareError) {
-            console.log('Share error:', shareError);
-            
-            // Fallback: Create download link
-            const dataUrl = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = 'qr-code.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showMessage('📱 QR Code saved to downloads!');
-          }
-        } else {
-          // Desktop: Copy to clipboard
-          copyQRToClipboard();
-        }
-        
-        setIsSharing(false);
-        
-      }, 'image/png', 0.95); // 95% quality
-      
-    } catch (error) {
-      console.error('Share failed:', error);
-      setIsSharing(false);
-      showMessage('❌ Failed to share QR code');
-    }
-  };
-
-  // Alternative: Simple mobile image share (works on most devices)
-  const shareQRAsImage = async () => {
-    if (!qrRef.current) {
-      showMessage('Please generate a QR code first');
-      return;
-    }
-    
-    setIsSharing(true);
-    
-    try {
-      // Create high-quality canvas
-      const canvas = await html2canvas(qrRef.current, {
-        scale: 3, // Very high resolution for mobile
-        backgroundColor: null,
-        useCORS: true
-      });
-      
-      // Convert to data URL
-      const dataUrl = canvas.toDataURL('image/png');
-      
-      // Create temporary link for download
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = 'qr-code-share.png';
-      
-      // For mobile browsers that support share API
-      if (navigator.share) {
-        try {
-          // Convert data URL to blob
-          const response = await fetch(dataUrl);
-          const blob = await response.blob();
-          const file = new File([blob], 'qr-code.png', { type: 'image/png' });
-          
-          // Try to share as file
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({
-              files: [file],
-              title: 'QR Code',
-              text: `Check out this QR code!\nLink: ${text}`
-            });
-            showMessage('✅ QR Code image shared!');
-          } else {
-            // Fallback: Save image first
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Wait a moment then share text
-            setTimeout(async () => {
-              await navigator.share({
-                title: 'QR Code',
-                text: `Check out this QR code!\nLink: ${text}\n\nImage saved to your photos.`
-              });
-            }, 500);
-            
-            showMessage('✅ QR Code saved! Now sharing...');
-          }
-        } catch (shareError) {
-          console.log('Direct share failed:', shareError);
-          
-          // Fallback: Just download the image
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          showMessage('📱 QR Code saved to your photos!');
-        }
-      } else {
-        // Desktop: Copy to clipboard
-        copyQRToClipboard();
+        showMessage('✅ QR Code shared!');
+      } catch (error) {
+        // If file sharing fails, fallback to download
+        const link = document.createElement('a');
+        link.href = imgUrl;
+        link.download = 'qr-code.png';
+        link.click();
+        showMessage('📱 Image saved to downloads!');
       }
-      
-    } catch (error) {
-      console.error('Image share failed:', error);
-      showMessage('❌ Failed to share image');
-    } finally {
-      setIsSharing(false);
-    }
-  };
+    });
+  } else {
+    // Desktop: Copy image
+    copyQRToClipboard();
+  }
+  
+  setIsSharing(false);
+};
 
   // Show snackbar message
   const showMessage = (message) => {
