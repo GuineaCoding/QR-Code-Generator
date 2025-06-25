@@ -1,5 +1,4 @@
-// App.jsx - UPDATED SHARE FUNCTION
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import './App.css';
@@ -24,10 +23,20 @@ function App() {
   
   const [selectedPreset, setSelectedPreset] = useState('warm');
   
+  // PNG image state
+  const [pngImage, setPngImage] = useState(null);
+  const [isGeneratingPNG, setIsGeneratingPNG] = useState(false);
+  
   const qrRef = useRef();
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isSharing, setIsSharing] = useState(false);
+  
+  // View mode: 'svg' or 'png'
+  const [viewMode, setViewMode] = useState('svg');
+  
+  // Track previous text to detect changes
+  const [prevText, setPrevText] = useState(text);
 
   const sampleLinks = [
     { label: 'GitHub', url: 'https://github.com' },
@@ -47,6 +56,23 @@ function App() {
     { id: 'midnight', name: 'Midnight', fgColor: '#0d47a1', bgColor: '#e3f2fd', borderColor: '#90caf9' },
     { id: 'berry', name: 'Berry', fgColor: '#4a148c', bgColor: '#f3e5f5', borderColor: '#ce93d8' },
   ];
+
+  // Switch to SVG view when QR properties change
+  useEffect(() => {
+    if (prevText !== text && viewMode === 'png') {
+      setViewMode('svg');
+      showMessage('Switched to SVG view - Generate PNG to see updated image');
+    }
+    setPrevText(text);
+  }, [text, viewMode]);
+
+  // Also switch to SVG when other QR properties change
+  useEffect(() => {
+    if (viewMode === 'png') {
+      setViewMode('svg');
+      showMessage('Switched to SVG view - Generate PNG to see updated image');
+    }
+  }, [size, fgColor, bgColor, border, borderColor, borderWidth, customText]);
 
   const applyPreset = (preset) => {
     setSelectedPreset(preset.id);
@@ -73,13 +99,45 @@ function App() {
     setCustomTextFontSize(14);
     
     setSelectedPreset('warm');
+    setPngImage(null);
+    setViewMode('svg');
+  };
+
+  const generatePNGPreview = async () => {
+    if (!qrRef.current) {
+      showMessage('Please generate a QR code first');
+      return;
+    }
+    
+    setIsGeneratingPNG(true);
+    
+    try {
+      const canvas = await html2canvas(qrRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null
+      });
+      
+      const pngDataUrl = canvas.toDataURL('image/png');
+      setPngImage(pngDataUrl);
+      setViewMode('png');
+      showMessage('PNG preview generated!');
+    } catch (error) {
+      console.error('Error generating PNG:', error);
+      showMessage('Failed to generate PNG preview');
+    } finally {
+      setIsGeneratingPNG(false);
+    }
   };
 
   const downloadPNG = async () => {
     if (!qrRef.current) return;
     
     try {
-      const canvas = await html2canvas(qrRef.current);
+      const canvas = await html2canvas(qrRef.current, {
+        scale: 2,
+        useCORS: true
+      });
       const link = document.createElement('a');
       link.download = `qr-code-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
@@ -111,7 +169,6 @@ function App() {
     }
   };
 
-  // FIXED: Copy QR Code IMAGE to clipboard on desktop
   const copyQRToClipboard = async () => {
     if (!qrRef.current) {
       showMessage('Please generate a QR code first');
@@ -119,18 +176,14 @@ function App() {
     }
     
     try {
-      // Convert QR element to canvas
       const canvas = await html2canvas(qrRef.current);
       
-      // Convert canvas to blob
       canvas.toBlob(async (blob) => {
         try {
-          // Create ClipboardItem with the image
           const item = new ClipboardItem({
             'image/png': blob
           });
           
-          // Write to clipboard
           await navigator.clipboard.write([item]);
           showMessage('✅ QR Code copied to clipboard!');
         } catch (err) {
@@ -145,7 +198,6 @@ function App() {
     }
   };
 
-  // Fallback copy method for browsers that don't support ClipboardItem
   const fallbackCopy = (canvas) => {
     const dataUrl = canvas.toDataURL('image/png');
     const link = document.createElement('a');
@@ -159,67 +211,72 @@ function App() {
     showMessage('📋 QR downloaded! You can now paste it from your downloads folder');
   };
 
-const shareQR = async () => {
-  if (!qrRef.current) {
-    showMessage('Please generate a QR code first');
-    return;
-  }
-  
-  setIsSharing(true);
-  
-  // Generate image instantly in view
-  const canvas = await html2canvas(qrRef.current);
-  const imgUrl = canvas.toDataURL('image/png');
-  
-  // Create preview image element
-  const img = document.createElement('img');
-  img.src = imgUrl;
-  img.style.maxWidth = '100%';
-  img.style.borderRadius = '8px';
-  img.style.margin = '10px 0';
-  
-  // Create preview container
-  const preview = document.createElement('div');
-  preview.style.textAlign = 'center';
-  preview.style.padding = '20px';
-  preview.appendChild(img);
-  
-  // If mobile, share the image file
-  if (navigator.share) {
-    canvas.toBlob(async (blob) => {
-      const file = new File([blob], 'qr-code.png', { type: 'image/png' });
-      
-      try {
-        await navigator.share({
-          files: [file],
-          title: 'QR Code',
-          text: `QR Code: ${text}`
-        });
-        showMessage('✅ QR Code shared!');
-      } catch (error) {
-        // If file sharing fails, fallback to download
-        const link = document.createElement('a');
-        link.href = imgUrl;
-        link.download = 'qr-code.png';
-        link.click();
-        showMessage('📱 Image saved to downloads!');
-      }
-    });
-  } else {
-    // Desktop: Copy image
-    copyQRToClipboard();
-  }
-  
-  setIsSharing(false);
-};
+  const shareQR = async () => {
+    if (!qrRef.current) {
+      showMessage('Please generate a QR code first');
+      return;
+    }
+    
+    setIsSharing(true);
+    
+    const canvas = await html2canvas(qrRef.current);
+    const imgUrl = canvas.toDataURL('image/png');
+    
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.style.maxWidth = '100%';
+    img.style.borderRadius = '8px';
+    img.style.margin = '10px 0';
+    
+    const preview = document.createElement('div');
+    preview.style.textAlign = 'center';
+    preview.style.padding = '20px';
+    preview.appendChild(img);
+    
+    if (navigator.share) {
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'qr-code.png', { type: 'image/png' });
+        
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'QR Code',
+            text: `QR Code: ${text}`
+          });
+          showMessage('✅ QR Code shared!');
+        } catch (error) {
+          const link = document.createElement('a');
+          link.href = imgUrl;
+          link.download = 'qr-code.png';
+          link.click();
+          showMessage('📱 Image saved to downloads!');
+        }
+      });
+    } else {
+      copyQRToClipboard();
+    }
+    
+    setIsSharing(false);
+  };
 
-  // Show snackbar message
   const showMessage = (message) => {
     setSnackbarMessage(message);
     setShowSnackbar(true);
     setTimeout(() => {
       setShowSnackbar(false);
     }, 3000);
+  };
+
+  const handleTextChange = (newText) => {
+    setText(newText);
+  };
+
+  const handlePresetClick = (preset) => {
+    applyPreset(preset);
+  };
+
+  const handleColorChange = (setter, value) => {
+    setter(value);
   };
 
   return (
@@ -242,7 +299,7 @@ const shareQR = async () => {
               <input
                 type="text"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => handleTextChange(e.target.value)}
                 placeholder="https://example.com"
                 className="text-input pixel-input"
               />
@@ -253,7 +310,7 @@ const shareQR = async () => {
                   {sampleLinks.map((link) => (
                     <button
                       key={link.label}
-                      onClick={() => setText(link.url)}
+                      onClick={() => handleTextChange(link.url)}
                       className="link-chip pixel-button"
                     >
                       {link.label}
@@ -286,7 +343,7 @@ const shareQR = async () => {
                 {colorPresets.map((preset) => (
                   <button
                     key={preset.id}
-                    onClick={() => applyPreset(preset)}
+                    onClick={() => handlePresetClick(preset)}
                     className={`preset-button ${selectedPreset === preset.id ? 'selected' : ''}`}
                     title={preset.name}
                   >
@@ -307,7 +364,7 @@ const shareQR = async () => {
                   <input
                     type="color"
                     value={fgColor}
-                    onChange={(e) => setFgColor(e.target.value)}
+                    onChange={(e) => handleColorChange(setFgColor, e.target.value)}
                     className="color-input"
                   />
                   <span className="color-hex">{fgColor}</span>
@@ -320,7 +377,7 @@ const shareQR = async () => {
                   <input
                     type="color"
                     value={bgColor}
-                    onChange={(e) => setBgColor(e.target.value)}
+                    onChange={(e) => handleColorChange(setBgColor, e.target.value)}
                     className="color-input"
                   />
                   <span className="color-hex">{bgColor}</span>
@@ -372,7 +429,6 @@ const shareQR = async () => {
               )}
             </div>
 
-            {/* Custom Text Controls */}
             <div className="input-group">
               <label className="input-label">Custom Text (appears below QR)</label>
               <input
@@ -479,10 +535,11 @@ const shareQR = async () => {
                 Reset
               </button>
               <button 
-                onClick={() => showMessage('QR Code generated! Changes update in real-time.')}
+                onClick={generatePNGPreview}
                 className="pixel-button primary"
+                disabled={isGeneratingPNG}
               >
-                Generate QR Code
+                {isGeneratingPNG ? 'Generating...' : 'Generate PNG'}
               </button>
             </div>
           </section>
@@ -491,6 +548,28 @@ const shareQR = async () => {
             <div className="panel-header">
               <h2 className="panel-title">📱 Live Preview</h2>
               <p className="panel-subtitle">Scan with any QR app</p>
+              
+              <div className="view-toggle">
+                <button 
+                  onClick={() => setViewMode('svg')} 
+                  className={`view-toggle-btn ${viewMode === 'svg' ? 'active' : ''}`}
+                >
+                  SVG
+                </button>
+                <button 
+                  onClick={() => setViewMode('png')} 
+                  className={`view-toggle-btn ${viewMode === 'png' ? 'active' : ''}`}
+                  disabled={isGeneratingPNG && !pngImage}
+                >
+                  {isGeneratingPNG ? 'Generating...' : 'PNG'}
+                </button>
+              </div>
+              
+              <div className="view-mode-hint">
+                {viewMode === 'png' && (
+                  <small>PNG view: Changes will switch back to SVG</small>
+                )}
+              </div>
             </div>
             
             <div 
@@ -498,31 +577,57 @@ const shareQR = async () => {
               style={{
                 backgroundColor: bgColor,
                 border: border ? `${borderWidth}px solid ${borderColor}` : 'none',
-                padding: border ? '20px' : '0'
+                padding: border ? '20px' : '0',
+                minHeight: '300px'
               }}
               ref={qrRef}
             >
-              <QRCodeSVG
-                value={text}
-                size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
-                fgColor={fgColor}
-                bgColor="transparent"
-                level="M"
-                includeMargin={true}
-              />
-              
-              {customText && (
-                <div 
-                  className="custom-text"
-                  style={{
-                    color: customTextColor,
-                    backgroundColor: customTextBgColor,
-                    border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
-                    fontSize: `${customTextFontSize}px`
-                  }}
-                >
-                  {customText}
-                </div>
+              {viewMode === 'svg' ? (
+                <>
+                  <QRCodeSVG
+                    value={text}
+                    size={Math.min(size, 410 - (border ? borderWidth * 2 + 40 : 0))}
+                    fgColor={fgColor}
+                    bgColor="transparent"
+                    level="M"
+                    includeMargin={true}
+                  />
+                  
+                  {customText && (
+                    <div 
+                      className="custom-text"
+                      style={{
+                        color: customTextColor,
+                        backgroundColor: customTextBgColor,
+                        border: customTextBorder ? `${customTextBorderWidth}px solid ${customTextBorderColor}` : 'none',
+                        fontSize: `${customTextFontSize}px`
+                      }}
+                    >
+                      {customText}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {pngImage ? (
+                    <img 
+                      src={pngImage} 
+                      alt="QR Code PNG Preview" 
+                      className="qr-png-preview"
+                    />
+                  ) : (
+                    <div className="png-placeholder">
+                      <p>Click "Generate PNG" to create preview</p>
+                    </div>
+                  )}
+                  
+                  {isGeneratingPNG && (
+                    <div className="generating-overlay">
+                      <div className="spinner"></div>
+                      <p>Generating PNG...</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -545,7 +650,7 @@ const shareQR = async () => {
                   disabled={isSharing}
                 >
                   <span className="btn-icon">📤</span>
-                  {isSharing ? 'Sharing...' : (navigator.share ? 'Share Image' : 'Copy Image')}
+                  <span>{isSharing ? 'Processing...' : 'Share/Copy'}</span>
                 </button>
               </div>
               
@@ -564,7 +669,6 @@ const shareQR = async () => {
         </div>
       </main>
 
-      {/* Snackbar Notification */}
       {showSnackbar && (
         <div className="snackbar">
           {snackbarMessage}
