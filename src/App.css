@@ -1,4 +1,3 @@
-/* App.css - FIXED Centered Layout */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Press+Start+2P&display=swap');
 
 :root {
@@ -14,7 +13,6 @@
   --pixel-radius: 8px;
   --pixel-border: 4px;
   --max-width: 1400px;
-  --panel-min-height: 700px;
 }
 
 * {
@@ -34,7 +32,6 @@ body {
   align-items: center;
 }
 
-/* ===== MAIN CONTAINER - CENTERED ===== */
 .app-container {
   width: 100%;
   max-width: var(--max-width);
@@ -45,7 +42,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== HEADER - CENTERED TOP ===== */
 .app-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -75,7 +71,6 @@ body {
   max-width: 600px;
 }
 
-/* ===== MAIN CONTENT - CENTERED HORIZONTALLY ===== */
 .main-content {
   width: 100%;
   display: flex;
@@ -83,20 +78,16 @@ body {
   align-items: flex-start;
 }
 
-/* ===== PANELS CONTAINER - CENTERED & INLINE ===== */
 .panels-container {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  /* Make children equal height */
   gap: 2rem;
   width: 100%;
   max-width: 1300px;
-  /* Slightly less than max-width for breathing room */
   margin: 0 auto;
 }
 
-/* ===== INDIVIDUAL PANELS - EQUAL HEIGHT ===== */
 .controls-panel,
 .preview-panel {
   background: var(--warm-card);
@@ -111,20 +102,9 @@ body {
   flex-direction: column;
   padding: 2rem;
   flex: 1;
-  min-height: var(--panel-min-height);
+  min-height: 700px;
   width: 100%;
   max-width: 500px;
-  /* Equal width for both panels */
-}
-
-/* Make panels equal height on desktop */
-@media (min-width: 900px) {
-
-  .controls-panel,
-  .preview-panel {
-    height: auto;
-    align-self: stretch;
-  }
 }
 
 .controls-panel::before,
@@ -145,7 +125,6 @@ body {
   opacity: 0.3;
 }
 
-/* ===== PANEL HEADERS - TOP ALIGNED ===== */
 .panel-header {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -167,24 +146,6 @@ body {
   text-align: center;
 }
 
-/* ===== CONTROLS PANEL CONTENT ===== */
-.controls-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-}
-
-/* ===== PREVIEW PANEL CONTENT ===== */
-.preview-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-  justify-content: space-between;
-}
-
-/* ===== INPUT GROUPS ===== */
 .input-group {
   width: 100%;
   margin-bottom: 1.5rem;
@@ -206,7 +167,6 @@ body {
   color: var(--warm-primary);
 }
 
-/* Input Fields */
 .text-input {
   width: 100%;
   padding: 1rem;
@@ -225,7 +185,6 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.3);
 }
 
-/* Sample Links */
 .sample-links {
   margin-top: 1rem;
 }
@@ -261,7 +220,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Slider */
 .pixel-slider {
   width: 100%;
   height: 12px;
@@ -301,7 +259,6 @@ body {
   font-size: 0.8rem;
 }
 
-/* Preset Grid */
 .preset-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -355,7 +312,6 @@ body {
   text-align: center;
 }
 
-/* Color Controls */
 .color-controls {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -395,7 +351,6 @@ body {
   min-width: 100px;
 }
 
-/* Checkbox */
 .checkbox-label {
   display: flex;
   align-items: center;
@@ -435,7 +390,6 @@ body {
   font-size: 1rem;
 }
 
-/* Border Controls */
 .border-controls {
   margin-top: 1rem;
   padding: 1.5rem;
@@ -444,12 +398,10 @@ body {
   border: 2px solid var(--warm-border);
 }
 
-/* Action Buttons - Position at bottom of controls */
 .action-buttons {
   display: flex;
   gap: 1rem;
   margin-top: auto;
-  /* Push to bottom */
   padding-top: 1rem;
 }
 
@@ -464,21 +416,6 @@ body {
   text-align: center;
   position: relative;
   flex: 1;
-}
-
-.pixel-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.pixel-button:hover::before {
-  left: 100%;
 }
 
 .pixel-button.primary {
@@ -505,11 +442,9 @@ body {
   box-shadow: 6px 6px 0 var(--warm-border);
 }
 
-/* ===== PREVIEW PANEL ===== */
 .qr-display {
   width: 100%;
   max-width: 410px;
-  max-height: 410px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -581,10 +516,6 @@ body {
   background: var(--warm-card);
 }
 
-.download-btn::before {
-  display: none; 
-}
-
 .download-btn::after {
   content: '';
   position: absolute;
@@ -597,18 +528,10 @@ body {
   pointer-events: none;
 }
 
-
 .download-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
-.download-btn.png:hover {
-  background: #ff7043;
-  box-shadow: 0 6px 0 var(--warm-accent);
-}
-
-
 
 .download-btn.png {
   background: var(--warm-primary);
@@ -617,9 +540,9 @@ body {
   box-shadow: 0 4px 0 var(--warm-accent);
 }
 
-.download-btn.svg:hover {
-  background: #2196f3;
-  box-shadow: 0 6px 0 #1565c0;
+.download-btn.png:hover {
+  background: #ff7043;
+  box-shadow: 0 6px 0 var(--warm-accent);
 }
 
 .download-btn.svg {
@@ -629,6 +552,10 @@ body {
   box-shadow: 0 4px 0 #1565c0;
 }
 
+.download-btn.svg:hover {
+  background: #2196f3;
+  box-shadow: 0 6px 0 #1565c0;
+}
 
 .download-btn.share {
   background: #ffb300;
@@ -643,14 +570,13 @@ body {
 }
 
 .download-btn.share.sharing {
-  animation: none; 
   opacity: 0.9;
   cursor: wait;
 }
 
 .btn-icon {
-    font-size: 1rem;
-  }
+  font-size: 1rem;
+}
 
 .download-info {
   background: var(--warm-bg);
@@ -666,7 +592,6 @@ body {
   line-height: 1.4;
 }
 
-/* ===== FOOTER ===== */
 .app-footer {
   text-align: center;
   padding: 2rem;
@@ -684,21 +609,9 @@ body {
   color: var(--warm-accent);
 }
 
-
-
-/* ===== ANIMATIONS ===== */
 @keyframes pixelPulse {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.8;
-    transform: scale(1.02);
-  }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
 }
 
 @keyframes simplePulse {
@@ -714,213 +627,6 @@ body {
   animation: pixelPulse 2s ease-in-out infinite;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
-
-/* Large screens */
-@media (min-width: 1400px) {
-  .panels-container {
-    max-width: 1300px;
-  }
-}
-
-/* Tablet: Adjust layout */
-@media (max-width: 1100px) {
-  .panels-container {
-    gap: 1.5rem;
-    max-width: 900px;
-  }
-
-  .controls-panel,
-  .preview-panel {
-    padding: 1.5rem !important;
-  }
-
-  .preset-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Mobile: Stack panels */
-@media (max-width: 900px) {
-  .panels-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    max-width: 600px;
-  }
-
-  .controls-panel,
-  .preview-panel {
-    max-width: 100%;
-    min-height: auto;
-    /* Remove fixed height on mobile */
-  }
-}
-
-/* Small screens */
-@media (max-width: 768px) {
-  body {
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100vw;
-  }
-
-  .app-container,
-  .main-content,
-  .panels-container,
-  .preview-panel,
-  .controls-panel {
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-
-  .pixel-text {
-    font-size: 1.5rem;
-    text-shadow:
-      2px 2px 0 var(--warm-border),
-      4px 4px 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .subtitle {
-    font-size: 1rem;
-  }
-
-  .preset-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .color-controls {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .download-buttons {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .pixel-button,
-  .download-btn {
-    width: 100%;
-  }
-
-  .qr-display {
-    max-width: 100%;
-    max-height: none;
-    padding: 1.5rem;
-    margin: 0 auto 1.5rem;
-    overflow: visible;
-  }
-
-  .qr-display svg {
-    max-width: 100%;
-    max-height: 300px;
-    width: auto;
-    height: auto;
-  }
-
-  .preview-panel {
-    padding: 1.5rem !important;
-  }
-    .download-btn.share {
-    background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-    color: white !important;
-    border-color: #1b5e20 !important;
-  }
-    .download-btn.share::after {
-    content: 'Image';
-  }
-  
-
-  @supports (padding: max(0px)) {
-    body {
-      padding-left: max(20px, env(safe-area-inset-left));
-      padding-right: max(20px, env(safe-area-inset-right));
-    }
-  }
-}
-@media (min-width: 769px) {
-  .download-btn.share::after {
-    content: 'Image';
-  }
-}
-
-
-/* Extra small screens */
-@media (max-width: 480px) {
-  body {
-    padding: 10px;
-  }
-
-  .pixel-text {
-    font-size: 1.3rem;
-  }
-
-  .preset-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .panel-title {
-    font-size: 1rem;
-  }
-
-  .preset-name {
-    font-size: 0.5rem;
-  }
-
-  .color-input {
-    width: 40px;
-    height: 40px;
-  }
-
-  .color-hex {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-    min-width: 80px;
-  }
-
-  .download-btn {
-    min-height: 70px;
-    padding: 0.75rem;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 1rem;
-  }
-
-  .btn-icon {
-    margin-bottom: 0;
-    font-size: 1.2rem;
-  }
-
-   .download-btn span:not(.btn-icon) {
-    text-align: left;
-    flex: 1;
-  }
-  
-
-  .qr-display {
-    padding: 1rem;
-    margin: 0 auto 1rem;
-  }
-
-  .qr-display svg {
-    max-height: 250px;
-  }
-
-}
-
-/* Smooth transitions */
-* {
-  transition: background-color 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
 .custom-text-controls {
   margin-top: 1rem;
   padding: 1.5rem;
@@ -931,15 +637,8 @@ body {
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .custom-text-controls .color-controls {
@@ -956,48 +655,6 @@ body {
   padding: 1rem;
 }
 
-.custom-text {
-  margin-top: 1rem;
-  font-family: 'Press Start 2P', cursive;
-  text-align: center;
-  padding: 0.75rem 1rem;
-  border-radius: var(--pixel-radius);
-  max-width: 90%;
-  word-break: break-word;
-  line-height: 1.4;
-  transition: all 0.3s ease;
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-}
-
-@media (max-width: 768px) {
-  .custom-text-controls .color-controls {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .custom-text {
-    font-size: 0.7rem !important;
-    padding: 0.5rem 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .custom-text-controls {
-    padding: 1rem;
-  }
-
-  .download-btn {
-    padding: 0.6rem;
-    font-size: 0.7rem;
-    min-height: 60px;
-  }
-
-  .custom-text {
-    font-size: 0.6rem !important;
-  }
-}
-
-/* ===== SNACKBAR NOTIFICATION ===== */
 .snackbar {
   position: fixed;
   bottom: 30px;
@@ -1019,90 +676,15 @@ body {
 }
 
 @keyframes snackbarSlideUp {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 @keyframes snackbarFadeOut {
-  from {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  to {
-    opacity: 0;
-    transform: translateX(-50%) translateY(20px);
-  }
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(20px); }
 }
 
-/* Update share button text and styling */
-.download-btn.share {
-  background: linear-gradient(135deg, #ffd54f, #ffb300) !important;
-  color: var(--warm-text) !important;
-  border-color: #ff8f00 !important;
-}
-
-/* Button label changes based on device */
-@media (max-width: 768px) {
-  .download-btn.share::after {
-    content: 'Share';
-  }
-}
-
-@media (min-width: 769px) {
-  .download-btn.share::after {}
-}
-
-/* Loading animation for copy operation */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-.copy-loading {
-  animation: pulse 0.5s ease infinite;
-}
-
-.download-btn.share.sharing {
-  background: linear-gradient(135deg, #ff9800, #f57c00) !important;
-  animation: pulse 1.5s infinite !important;
-  position: relative;
-  overflow: hidden;
-}
-
-.download-btn.share.sharing::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-/* ===== PNG DISPLAY STYLES ===== */
 .view-toggle {
   display: flex;
   gap: 10px;
@@ -1206,8 +788,114 @@ body {
   color: var(--warm-accent);
 }
 
-/* Responsive adjustments */
+/* RESPONSIVE */
+@media (min-width: 900px) {
+  .controls-panel,
+  .preview-panel {
+    height: auto;
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 1100px) {
+  .panels-container {
+    gap: 1.5rem;
+    max-width: 900px;
+  }
+
+  .controls-panel,
+  .preview-panel {
+    padding: 1.5rem !important;
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .panels-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 600px;
+  }
+
+  .controls-panel,
+  .preview-panel {
+    max-width: 100%;
+    min-height: auto;
+  }
+}
+
 @media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .app-container,
+  .main-content,
+  .panels-container,
+  .preview-panel,
+  .controls-panel {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .pixel-text {
+    font-size: 1.5rem;
+    text-shadow:
+      2px 2px 0 var(--warm-border),
+      4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pixel-button,
+  .download-btn {
+    width: 100%;
+  }
+
+  .qr-display {
+    max-width: 100%;
+    max-height: none;
+    padding: 1.5rem;
+    margin: 0 auto 1.5rem;
+  }
+
+  .qr-display svg {
+    max-width: 100%;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+  }
+
+  .preview-panel {
+    padding: 1.5rem !important;
+  }
+
   .view-toggle-btn {
     padding: 6px 12px;
     font-size: 0.6rem;
@@ -1221,9 +909,98 @@ body {
     height: 150px;
     font-size: 0.7rem;
   }
+
+  .custom-text-controls .color-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .custom-text {
+    font-size: 0.7rem !important;
+    padding: 0.5rem 0.75rem;
+  }
+
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(20px, env(safe-area-inset-left));
+      padding-right: max(20px, env(safe-area-inset-right));
+    }
+  }
 }
 
 @media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .pixel-text {
+    font-size: 1.3rem;
+  }
+
+  .preset-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .panel-title {
+    font-size: 1rem;
+  }
+
+  .preset-name {
+    font-size: 0.5rem;
+  }
+
+  .color-input {
+    width: 40px;
+    height: 40px;
+  }
+
+  .color-hex {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    min-width: 80px;
+  }
+
+  .download-btn {
+    min-height: 70px;
+    padding: 0.75rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .btn-icon {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+  }
+
+  .download-btn span:not(.btn-icon) {
+    text-align: left;
+    flex: 1;
+  }
+
+  .qr-display {
+    padding: 1rem;
+    margin: 0 auto 1rem;
+  }
+
+  .qr-display svg {
+    max-height: 250px;
+  }
+
+  .custom-text-controls {
+    padding: 1rem;
+  }
+
+  .download-btn {
+    padding: 0.6rem;
+    font-size: 0.7rem;
+    min-height: 60px;
+  }
+
+  .custom-text {
+    font-size: 0.6rem !important;
+  }
+
   .view-toggle {
     gap: 5px;
   }
@@ -1241,4 +1018,11 @@ body {
   .view-mode-hint small {
     font-size: 0.65rem;
   }
+}
+
+* {
+  transition: background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
